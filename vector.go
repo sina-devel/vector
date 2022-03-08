@@ -88,9 +88,8 @@ func (v *Vector) Append(values ...int) {
 		v.capacity = newCap
 	}
 
-	for i := 0; i < len(values); i++ {
-		*(*int)(unsafe.Add(v.array, intSize*uintptr(v.length+i))) = values[i]
-	}
+	under := (*Vector)(unsafe.Pointer(&values)).array
+	memmove(unsafe.Add(v.array, intSize*uintptr(v.length)), under, intSize*uintptr((len(values))))
 
 	v.length += len(values)
 }
